@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>S Ashwin Ganesh — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  :root{
+    --bg:#08090b; --bg-alt:#0d0f13;
+    --surface:rgba(255,255,255,0.045); --surface-hover:rgba(255,255,255,0.075);
+    --border:rgba(255,255,255,0.10); --border-strong:rgba(255,255,255,0.18);
+    --text:#f2f1ed; --muted:#96979c; --muted-dim:#5c5d62;
+    --accent:#ff5a3c; --accent-2:#ff8862; --accent-dim:rgba(255,90,60,0.14); --accent-glow:rgba(255,90,60,0.45);
+  }
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Inter',sans-serif; background:var(--bg); color:var(--text);
+    font-size:15px; line-height:1.7; overflow-x:hidden; position:relative;
+  }
+  #grain-canvas{position:fixed; inset:0; z-index:0; pointer-events:none; opacity:0.9;}
+  ::selection{background:var(--accent); color:#0a0a0a;}
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:sticky; top:0; z-index:100; display:flex; justify-content:space-between; align-items:center;
+    height:64px; padding:0 2.5rem; background:rgba(8,9,11,0.72); backdrop-filter:blur(14px) saturate(140%);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-name{font-family:'Unbounded',sans-serif; font-weight:800; font-size:16px; letter-spacing:-0.02em; color:var(--text); text-decoration:none;}
+  .nav-name span{color:var(--accent);}
+  .nav-links{display:flex; align-items:center; gap:2.2rem; list-style:none;}
+  .nav-links a{
+    text-decoration:none; color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:12px;
+    font-weight:500; letter-spacing:0.02em; transition:color .2s; position:relative;
+  }
+  .nav-links a:hover{color:var(--text);}
+  .nav-links a::before{content:attr(data-num); color:var(--accent); margin-right:6px; opacity:0.85;}
+  .nav-cta{
+    font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; color:var(--bg);
+    background:var(--accent); padding:9px 16px; border-radius:6px; text-decoration:none; transition:all .2s;
+  }
+  .nav-cta:hover{background:var(--accent-2); box-shadow:0 0 24px var(--accent-glow);}
+
+  /* ---------- LAYOUT ---------- */
+  .section{max-width:860px; margin:0 auto; padding:7rem 2.5rem; position:relative; z-index:1;}
+  .file-tag{
+    display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:12px;
+    color:var(--accent); letter-spacing:0.02em; margin-bottom:1.4rem; text-transform:none;
+  }
+  .file-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent-glow); display:inline-block;}
+  .section-heading{font-family:'Unbounded',sans-serif; font-weight:800; font-size:clamp(26px,3vw,34px); letter-spacing:-0.01em; margin-bottom:2.2rem;}
+
+  /* ---------- HERO ---------- */
+  #hero{
+    min-height:92vh; display:flex; flex-direction:column; justify-content:center; padding-top:4rem; padding-bottom:4rem;
+    max-width:1000px;
+  }
+  .hero-eyebrow{
+    font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--accent); letter-spacing:0.06em;
+    margin-bottom:1.6rem; display:flex; align-items:center; gap:10px;
+  }
+  .hero-eyebrow .dash{width:28px; height:1px; background:var(--accent); display:inline-block;}
+  .hero-name{
+    font-family:'Unbounded',sans-serif; font-weight:900; letter-spacing:-0.03em;
+    font-size:clamp(46px,8.5vw,104px); line-height:0.98; color:var(--text); margin-bottom:1.6rem;
+    text-transform:uppercase;
+  }
+  .hero-name .accent-word{color:var(--accent);}
+  .scramble{display:inline-block; white-space:pre;}
+  .hero-tagline{font-size:18px; color:var(--muted); max-width:560px; margin-bottom:2.6rem; line-height:1.75;}
+  .hero-tagline b{color:var(--text); font-weight:600;}
+  .hero-links{display:flex; gap:1rem; flex-wrap:wrap; align-items:center;}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; padding:13px 24px; border-radius:8px; font-size:14px;
+    font-weight:600; text-decoration:none; transition:all .2s; cursor:pointer; font-family:'Inter',sans-serif;
+  }
+  .btn-primary{background:var(--accent); color:#0a0a0a; border:1.5px solid var(--accent);}
+  .btn-primary:hover{background:var(--accent-2); box-shadow:0 0 28px var(--accent-glow); transform:translateY(-1px);}
+  .btn-outline{background:transparent; color:var(--text); border:1.5px solid var(--border-strong);}
+  .btn-outline:hover{border-color:var(--accent); color:var(--accent);}
+  .hero-scroll{
+    position:absolute; bottom:2.4rem; left:2.5rem; font-family:'JetBrains Mono',monospace; font-size:11px;
+    color:var(--muted-dim); display:flex; align-items:center; gap:8px;
+  }
+  .hero-scroll .line{width:1px; height:34px; background:linear-gradient(var(--accent), transparent); animation:scrollpulse 2s ease-in-out infinite;}
+  @keyframes scrollpulse{0%,100%{opacity:.3;}50%{opacity:1;}}
+
+  /* ---------- ABOUT ---------- */
+  .about-text{font-size:16px; color:var(--muted); line-height:1.9; margin-bottom:1.3rem; max-width:680px;}
+  .about-text b{color:var(--text); font-weight:600;}
+  .about-stats{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); margin-top:2.6rem; border:1px solid var(--border); border-radius:10px; overflow:hidden;}
+  .stat{background:var(--bg-alt); padding:1.6rem 1.2rem;}
+  .stat-num{font-family:'Unbounded',sans-serif; font-weight:800; font-size:26px; color:var(--accent);}
+  .stat-label{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted); margin-top:6px; letter-spacing:0.02em;}
+
+  /* ---------- PROJECTS ---------- */
+  .projects-grid{display:grid; grid-template-columns:1fr 1fr; gap:1.1rem;}
+  @media (max-width:680px){.projects-grid{grid-template-columns:1fr;}}
+  .project-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:1.8rem;
+    transition:border-color .25s, transform .25s, background .25s; position:relative; overflow:hidden;
+  }
+  .project-card::before{
+    content:''; position:absolute; inset:0; background:radial-gradient(400px circle at var(--mx,50%) var(--my,0%), var(--accent-dim), transparent 60%);
+    opacity:0; transition:opacity .3s; pointer-events:none;
+  }
+  .project-card:hover{border-color:var(--border-strong); transform:translateY(-3px); background:var(--surface-hover);}
+  .project-card:hover::before{opacity:1;}
+  .project-index{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--accent); margin-bottom:0.9rem; display:block;}
+  .project-title{font-family:'Unbounded',sans-serif; font-weight:600; font-size:17px; margin-bottom:0.7rem; color:var(--text); letter-spacing:-0.01em;}
+  .project-desc{font-size:13.5px; color:var(--muted); line-height:1.7; margin-bottom:1.3rem;}
+  .project-tags{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:1.3rem;}
+  .tag{font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:500; background:var(--accent-dim); color:var(--accent-2); padding:4px 10px; border-radius:100px; border:1px solid rgba(255,90,60,0.25);}
+  .project-link{font-size:13px; color:var(--text); text-decoration:none; font-weight:600; display:inline-flex; align-items:center; gap:6px; border-bottom:1.5px solid var(--border-strong); padding-bottom:2px; transition:all .2s;}
+  .project-link:hover{color:var(--accent); border-color:var(--accent); gap:9px;}
+
+  /* ---------- SKILLS ---------- */
+  .skills-grid{display:flex; flex-wrap:wrap; gap:0.7rem;}
+  .skill-pill{
+    background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:11px 18px;
+    font-size:13.5px; font-weight:500; color:var(--text); transition:all .2s; font-family:'JetBrains Mono',monospace;
+  }
+  .skill-pill:hover{border-color:var(--accent); color:var(--accent-2); background:var(--accent-dim);}
+
+  /* ---------- CONTACT ---------- */
+  #contact{padding-bottom:9rem;}
+  .contact-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:3rem;
+    display:grid; grid-template-columns:1.1fr 1fr; gap:2.5rem; align-items:center;
+  }
+  @media (max-width:680px){.contact-card{grid-template-columns:1fr; padding:2rem;}}
+  .contact-headline{font-family:'Unbounded',sans-serif; font-weight:800; font-size:clamp(24px,3vw,32px); line-height:1.15; letter-spacing:-0.01em; margin-bottom:1rem;}
+  .contact-headline .accent-word{color:var(--accent);}
+  .contact-intro{font-size:14.5px; color:var(--muted); margin-bottom:1.8rem; max-width:380px;}
+  .contact-links{display:flex; flex-direction:column; gap:0.9rem;}
+  .contact-link{
+    font-size:14px; font-weight:600; color:var(--text); text-decoration:none; display:flex; align-items:center;
+    gap:10px; padding:12px 16px; border:1px solid var(--border); border-radius:9px; transition:all .2s;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .contact-link .arrow{margin-left:auto; color:var(--muted); transition:transform .2s;}
+  .contact-link:hover{border-color:var(--accent); background:var(--accent-dim); color:var(--accent-2);}
+  .contact-link:hover .arrow{transform:translateX(4px); color:var(--accent);}
+
+  footer{text-align:center; padding:2.4rem; font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--muted-dim); border-top:1px solid var(--border); position:relative; z-index:1;}
+  footer .accent{color:var(--accent);}
+
+  @media (max-width:680px){
+    nav{padding:0 1.4rem;}
+    .nav-links{display:none;}
+    .section{padding:4.5rem 1.4rem;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .hero-scroll .line{animation:none;}
+  }
+</style>
+</head>
+<body>
+
+<canvas id="grain-canvas"></canvas>
+
+<nav>
+  <a href="#hero" class="nav-name">ASHWIN<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#about" data-num="01">ABOUT</a></li>
+    <li><a href="#projects" data-num="02">PROJECTS</a></li>
+    <li><a href="#skills" data-num="03">SKILLS</a></li>
+    <li><a href="#contact" data-num="04">CONTACT</a></li>
+  </ul>
+  <a href="mailto:ashwinganesh027@gmail.com" class="nav-cta">Let's talk</a>
+</nav>
+
+<div class="section" id="hero">
+  <p class="hero-eyebrow"><span class="dash"></span> B.TECH CSE · AI &amp; ML // AVAILABLE FOR OPPORTUNITIES</p>
+  <h1 class="hero-name"><span class="scramble" data-text="ASHWIN">ASHWIN</span><br><span class="scramble accent-word" data-text="GANESH">GANESH</span></h1>
+  <p class="hero-tagline">A second-year <b>AI/ML engineer in training</b>, building intelligent systems and interactive data platforms — from oceanographic data fusion to public-sector dashboards.</p>
+  <div class="hero-links">
+    <a href="#projects" class="btn btn-primary">View Projects →</a>
+    <a href="mailto:ashwinganesh027@gmail.com" class="btn btn-outline">Get in Touch</a>
+  </div>
+  <div class="hero-scroll"><span class="line"></span>SCROLL</div>
+</div>
+
+<div class="section" id="about">
+  <p class="file-tag">01_about.tsx</p>
+  <h2 class="section-heading">About Me</h2>
+  <p class="about-text">I'm a second-year <b>B.Tech CSE (AI &amp; ML)</b> student figuring out how to turn interest into expertise. I mapped out a three-year AI/ML roadmap — Python foundations, math, DSA, and ML — and track it in a personal knowledge system so nothing falls through the cracks between projects.</p>
+  <p class="about-text">Most of what I build starts as someone else's problem: an SIH build for fusing oceanographic, fisheries, and eDNA data into one platform, or an interactive dashboard for the <b>Karnataka State Police</b> built on Zoho Catalyst. I'm working toward an AI/ML role at a top product company, and every project is one more rep toward that.</p>
+  <div class="about-stats">
+    <div class="stat"><div class="stat-num">2nd</div><div class="stat-label">YEAR · CSE AIML</div></div>
+    <div class="stat"><div class="stat-num">02</div><div class="stat-label">PROJECTS SHIPPED</div></div>
+    <div class="stat"><div class="stat-num">3yr</div><div class="stat-label">AI/ML ROADMAP</div></div>
+  </div>
+</div>
+
+<div class="section" id="projects">
+  <p class="file-tag">02_projects.tsx</p>
+  <h2 class="section-heading">Projects</h2>
+  <div class="projects-grid">
+
+    <div class="project-card">
+      <span class="project-index">01 / OCEAN INTELLIGENCE</span>
+      <p class="project-title">Ocean Intelligence — SIH25041</p>
+      <p class="project-desc">An AI-driven unified data platform concept for oceanographic, fisheries, and molecular biodiversity insights, built for Smart India Hackathon. Frontend prototype uses Leaflet for geospatial maps and Chart.js for live data dashboards.</p>
+      <div class="project-tags">
+        <span class="tag">JavaScript</span><span class="tag">Leaflet.js</span><span class="tag">Chart.js</span><span class="tag">Data Viz</span>
+      </div>
+      <a href="https://github.com/ashcodes26" class="project-link" target="_blank">View Code →</a>
+    </div>
+
+    <div class="project-card">
+      <span class="project-index">02 / GOV-TECH DASHBOARD</span>
+      <p class="project-title">Karnataka State Police Dashboard</p>
+      <p class="project-desc">An interactive dashboard built on Zoho Catalyst, designed to help visualize and monitor state police data in one place instead of scattered spreadsheets and reports.</p>
+      <div class="project-tags">
+        <span class="tag">Zoho Catalyst</span><span class="tag">JavaScript</span><span class="tag">Dashboard</span>
+      </div>
+      <a href="https://github.com/ashcodes26" class="project-link" target="_blank">View Code →</a>
+    </div>
+
+  </div>
+</div>
+
+<div class="section" id="skills">
+  <p class="file-tag">03_skills.json</p>
+  <h2 class="section-heading">Skills</h2>
+  <div class="skills-grid">
+    <div class="skill-pill">Python</div>
+    <div class="skill-pill">JavaScript</div>
+    <div class="skill-pill">HTML / CSS</div>
+    <div class="skill-pill">Data Structures &amp; Algorithms</div>
+    <div class="skill-pill">Machine Learning</div>
+    <div class="skill-pill">Leaflet.js</div>
+    <div class="skill-pill">Chart.js</div>
+    <div class="skill-pill">Zoho Catalyst</div>
+    <div class="skill-pill">Git &amp; GitHub</div>
+  </div>
+</div>
+
+<div class="section" id="contact">
+  <p class="file-tag">04_contact.sh</p>
+  <div class="contact-card">
+    <div>
+      <h2 class="contact-headline">Let's build something <span class="accent-word">extraordinary</span>.</h2>
+      <p class="contact-intro">Open to internships, collaborations, and AI/ML opportunities. I reply to every message.</p>
+    </div>
+    <div class="contact-links">
+      <a href="mailto:ashwinganesh027@gmail.com" class="contact-link">Email <span class="arrow">→</span></a>
+      <a href="https://www.linkedin.com/in/ashwinganesh24" class="contact-link" target="_blank">LinkedIn <span class="arrow">→</span></a>
+      <a href="https://github.com/ashcodes26" class="contact-link" target="_blank">GitHub <span class="arrow">→</span></a>
+    </div>
+  </div>
+</div>
+
+<footer>Built by S Ashwin Ganesh <span class="accent">·</span> 2026</footer>
+
+<script>
+  // ---- Scramble / decode hero text animation ----
+  const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!<>-_\\/[]{}—=+*^?#";
+  function scramble(el, delay){
+    const finalText = el.getAttribute('data-text');
+    const len = finalText.length;
+    let frame = 0;
+    const totalFrames = 26;
+    setTimeout(() => {
+      const interval = setInterval(() => {
+        let out = "";
+        for(let i=0;i<len;i++){
+          const revealFrame = (i / len) * totalFrames * 0.65;
+          if(frame >= revealFrame + totalFrames * 0.35){
+            out += finalText[i];
+          } else if(finalText[i] === " "){
+            out += " ";
+          } else {
+            out += CHARS[Math.floor(Math.random()*CHARS.length)];
+          }
+        }
+        el.textContent = out;
+        frame++;
+        if(frame > totalFrames){
+          el.textContent = finalText;
+          clearInterval(interval);
+        }
+      }, 32);
+    }, delay);
+  }
+  document.querySelectorAll('.scramble').forEach((el, i) => scramble(el, 150 + i*220));
+
+  // ---- Ambient particle / grain canvas ----
+  const canvas = document.getElementById('grain-canvas');
+  const ctx = canvas.getContext('2d');
+  let w, h, particles;
+  function resize(){
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = document.documentElement.scrollHeight;
+  }
+  function initParticles(){
+    particles = Array.from({length: Math.min(70, Math.floor(w/22))}, () => ({
+      x: Math.random()*w, y: Math.random()*h,
+      r: Math.random()*1.4 + 0.3,
+      vy: Math.random()*0.15 + 0.03,
+      o: Math.random()*0.5 + 0.15
+    }));
+  }
+  resize(); initParticles();
+  window.addEventListener('resize', () => { resize(); initParticles(); });
+
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    const grad = ctx.createRadialGradient(w*0.5, h*0.0, 0, w*0.5, h*0.0, h*0.55);
+    grad.addColorStop(0, 'rgba(255,90,60,0.05)');
+    grad.addColorStop(1, 'rgba(255,90,60,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0,0,w,h);
+    particles.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(245,244,240,${p.o})`;
+      ctx.fill();
+      p.y -= p.vy;
+      if(p.y < -5){ p.y = h+5; p.x = Math.random()*w; }
+    });
+    requestAnimationFrame(draw);
+  }
+  if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    draw();
+  }
+
+  // ---- Spotlight hover on project cards ----
+  document.querySelectorAll('.project-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+      card.style.setProperty('--my', `${e.clientY - rect.top}px`);
+    });
+  });
+</script>
+
+</body>
+</html>
